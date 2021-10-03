@@ -1,16 +1,35 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { fetchFilmQuery } from "../services/FilmsApi";
-import { Link, NavLink, useRouteMatch, Route } from "react-router-dom";
+import { Link, useRouteMatch, useHistory, useLocation } from "react-router-dom";
 
 export default function MoviesPage() {
   const [query, setQuery] = useState("");
   const [films, setFilms] = useState(null);
   const { url } = useRouteMatch();
+  const history = useHistory();
+  const location = useLocation();
+
+  const searchQuery = new URLSearchParams(location.search).get("query");
+
+  useEffect(() => {
+    if (searchQuery) {
+      fetchFilms(searchQuery).then(setFilms);
+    }
+  }, []);
+
+  const fetchFilms = async (name) => {
+    const response = await fetchFilmQuery(name);
+    return response;
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const response = await fetchFilmQuery(query);
+    if (!query) {
+      return;
+    }
+    const response = await fetchFilms(query);
     setFilms(response);
+    history.push({ ...location, search: `query=${query}` });
     reset();
   };
 
@@ -34,9 +53,7 @@ export default function MoviesPage() {
             onChange={handleChange}
           />
         </label>
-        {/* <NavLink to={`${url}?query=${query}`}> */}
         <button type="submit">Search</button>
-        {/* </NavLink> */}
       </form>
 
       {films && (
@@ -44,7 +61,14 @@ export default function MoviesPage() {
           <ul>
             {films.map((film) => (
               <li key={film.id}>
-                <Link to={`${url}/${film.id}`}>{film.original_title}</Link>
+                <Link
+                  to={{
+                    pathname: `${url}/${film.id}`,
+                    state: { from: location },
+                  }}
+                >
+                  {film.original_title}
+                </Link>
               </li>
             ))}
           </ul>

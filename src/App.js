@@ -1,11 +1,18 @@
 import { Route, Switch } from "react-router-dom";
-import { useState, useEffect } from "react";
-// import NotFoundViews from "./Views/NotFoundViews";
-import PopularFilmsOnStartPage from "./Views/PopularFilmsOnStartPage";
+import { useState, useEffect, lazy, Suspense } from "react";
 import { fetchPopularFilms } from "./services/FilmsApi";
-import FilmDetailsView from "./Views/FilmDetailsView";
-import MoviesPage from "./MoviesPage";
 import Navigation from "./Navigation";
+
+const HomePage = lazy(() =>
+  import("./HomePage" /*webpackChunkName: "HomePage"*/)
+);
+
+const MoviesPage = lazy(() =>
+  import("./MoviesPage" /*webpackChunkName: "MoviesPage"*/)
+);
+const MovieDetailsPage = lazy(() =>
+  import("./MovieDetailsPage" /*webpackChunkName: "MovieDetailsPage"*/)
+);
 
 export default function App() {
   const [films, setFilms] = useState(null);
@@ -19,23 +26,25 @@ export default function App() {
   return (
     <>
       <Navigation />
-      <Switch>
-        <Route path="/" exact>
-          {films && <PopularFilmsOnStartPage films={films} />}
-        </Route>
+      <Suspense fallback={<h1>Loading</h1>}>
+        <Switch>
+          <Route path="/" exact>
+            {films && <HomePage films={films} />}
+          </Route>
 
-        <Route path="/movies" exact>
-          <MoviesPage />
-        </Route>
+          <Route path="/movies" exact>
+            <MoviesPage />
+          </Route>
 
-        <Route path="/movies/:movieId">
-          <FilmDetailsView />
-        </Route>
+          <Route path="/movies/:movieId">
+            <MovieDetailsPage />
+          </Route>
 
-        {/* <Route>
+          {/* <Route>
           <NotFoundViews />
         </Route> */}
-      </Switch>
+        </Switch>
+      </Suspense>
     </>
   );
 }

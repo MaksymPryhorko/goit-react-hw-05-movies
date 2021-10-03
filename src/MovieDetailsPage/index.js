@@ -1,3 +1,3 @@
 import { formatWithCursor } from "prettier";
 
-export { default } from "./FilmDetailsView";
+export { default } from "./MovieDetailsPage";
