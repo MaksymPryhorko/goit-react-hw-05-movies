@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { fetchFilmQuery } from "../services/FilmsApi";
+import { fetchFilmQuery } from "../../services/FilmsApi";
 import { Link, useRouteMatch, useHistory, useLocation } from "react-router-dom";
 
 export default function MoviesPage() {

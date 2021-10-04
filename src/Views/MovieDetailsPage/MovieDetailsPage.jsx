@@ -5,10 +5,11 @@ import {
   NavLink,
   useLocation,
   useHistory,
+  Switch,
 } from "react-router-dom";
 import { useState, useEffect, lazy, Suspense } from "react";
-import { fetchFilmById } from "../services/FilmsApi";
-import FilmCard from "../FilmCard";
+import { fetchFilmById } from "../../services/FilmsApi";
+import FilmCard from "../../Components/FilmCard";
 import s from "./MovieDetailsPage.module.css";
 
 const Cast = lazy(() => import("../Cast" /*webpackChunkName: "Cast"*/));
@@ -51,12 +52,6 @@ export default function MovieDetailsPage() {
         Cast
       </NavLink>
 
-      <Suspense fallback={<h1>Loading</h1>}>
-        <Route path={`${path}/cast`}>
-          <Cast />
-        </Route>
-      </Suspense>
-
       <NavLink
         to={{
           pathname: `${url}/reviews`,
@@ -69,9 +64,15 @@ export default function MovieDetailsPage() {
       </NavLink>
 
       <Suspense fallback={<h1>Loading</h1>}>
-        <Route path={`${path}/reviews`}>
-          <Reviews />
-        </Route>
+        <Switch>
+          <Route path={`${path}/cast`}>
+            <Cast />
+          </Route>
+
+          <Route path={`${path}/reviews`}>
+            <Reviews />
+          </Route>
+        </Switch>
       </Suspense>
     </>
   );

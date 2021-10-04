@@ -1,17 +1,21 @@
 import { Route, Switch } from "react-router-dom";
 import { useState, useEffect, lazy, Suspense } from "react";
 import { fetchPopularFilms } from "./services/FilmsApi";
-import Navigation from "./Navigation";
+import Navigation from "./Components/Navigation";
+
+const NotFoundViews = lazy(() =>
+  import("./Views/NotFoundViews" /*webpackChunkName: "NotFoundViews"*/)
+);
 
 const HomePage = lazy(() =>
-  import("./HomePage" /*webpackChunkName: "HomePage"*/)
+  import("./Views/HomePage" /*webpackChunkName: "HomePage"*/)
 );
 
 const MoviesPage = lazy(() =>
-  import("./MoviesPage" /*webpackChunkName: "MoviesPage"*/)
+  import("./Views/MoviesPage" /*webpackChunkName: "MoviesPage"*/)
 );
 const MovieDetailsPage = lazy(() =>
-  import("./MovieDetailsPage" /*webpackChunkName: "MovieDetailsPage"*/)
+  import("./Views/MovieDetailsPage" /*webpackChunkName: "MovieDetailsPage"*/)
 );
 
 export default function App() {
@@ -29,7 +33,7 @@ export default function App() {
       <Suspense fallback={<h1>Loading</h1>}>
         <Switch>
           <Route path="/" exact>
-            {films && <HomePage films={films} />}
+            <HomePage films={films} />
           </Route>
 
           <Route path="/movies" exact>
@@ -40,9 +44,9 @@ export default function App() {
             <MovieDetailsPage />
           </Route>
 
-          {/* <Route>
-          <NotFoundViews />
-        </Route> */}
+          <Route>
+            <NotFoundViews />
+          </Route>
         </Switch>
       </Suspense>
     </>

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 
-import { fetchFilmCredits } from "../services/FilmsApi";
+import { fetchFilmCredits } from "../../services/FilmsApi";
 
 export default function Cast() {
   const [filmCredits, setFilmCredits] = useState(null);
